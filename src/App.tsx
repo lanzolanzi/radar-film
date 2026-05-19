@@ -41,7 +41,7 @@ export default function App() {
       {/* Header Section */}
       <div className="flex justify-between items-center bg-[#0a0a0a] border border-[#222] p-4 rounded-lg shadow-[0_0_15px_rgba(0,0,0,0.5)] shrink-0 z-10 relative">
         <div className="flex flex-col">
-          <span className="text-[10px] text-[#ff3b3b] tracking-[0.2em] font-bold">PROGETTO: SONAR-X // ARCHIVIO CERVO (IM)</span>
+          <span className="text-[10px] text-[#ff3b3b] tracking-[0.2em] font-bold">PROGETTO: SONAR-X // ISTITUTO NAUTICO ANDREA DORIA (IM)</span>
           <h1 className="text-2xl font-black text-white tracking-tighter">RADAR_NODE_SEC-12</h1>
         </div>
         <div className="flex gap-6 items-center">
@@ -119,18 +119,35 @@ export default function App() {
               // The sweep takes 4s to rotate. We use animation-delay based on the target's angle
               const delay = (pt.angle / 360) * 4;
               const uniqueClass = `ping-${pt.id}`;
+              const isMajor = pt.type === 'major_anomaly';
               
+              if (isMajor) {
+                const majorIcon = L.divIcon({
+                  className: '',
+                  html: `
+                    <div class="major-anomaly-dot ${isActive ? 'ping-active-major' : ''}" style="animation-delay: ${delay}s !important"></div>
+                  `,
+                  iconSize: [24, 24],
+                  iconAnchor: [12, 12]
+                });
+                return <Marker key={pt.id} position={[pt.lat, pt.lng]} icon={majorIcon} interactive={false} zIndexOffset={500} />;
+              }
+
+              const color = '#ff3b3b';
+              const radius = pt.radius * 2;
+              const pingAnimClass = isActive ? 'ping-active' : '';
+
               return (
                 <Circle 
                   key={pt.id}
                   center={[pt.lat, pt.lng]}
-                  radius={pt.radius * 2} // Increased radius for visibility
+                  radius={radius}
                   pathOptions={{ 
-                      color: '#ff3b3b', 
-                      fillColor: '#ff3b3b', 
-                      fillOpacity: 0, // start invisible to CSS can animate it
+                      color: color, 
+                      fillColor: color, 
+                      fillOpacity: 1, // CSS handles visibility
                       stroke: false,
-                      className: `sonar-ping ${uniqueClass} ${isActive ? 'ping-active' : ''}`
+                      className: `sonar-ping ${uniqueClass} ${pingAnimClass}`
                   }}
                 >
                   <style>

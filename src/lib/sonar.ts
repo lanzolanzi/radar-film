@@ -2,7 +2,7 @@ export interface SonarTarget {
   id: string;
   lat: number;
   lng: number;
-  type: 'submarine' | 'anomaly' | 'school_of_fish' | 'wreck';
+  type: 'submarine' | 'anomaly' | 'school_of_fish' | 'wreck' | 'major_anomaly';
   angle: number; // 0 to 360, 0 is North
   distance: number;
   radius: number;
@@ -39,6 +39,27 @@ export function generateSonarTargets(centerLat: number, centerLng: number, maxRa
     });
   }
   
+  // Specific large anomaly in the sea
+  const anomalyLat = 43.9160;
+  const anomalyLng = 8.1180;
+  
+  // Calculate angle for the anomaly
+  const dx = (anomalyLng - centerLng) * metersPerDegreeLng;
+  const dy = (anomalyLat - centerLat) * metersPerDegreeLat;
+  let anomalyAngleRad = Math.atan2(dx, dy); // math.atan2(x, y) = angle from north if y is north, x is east
+  let anomalyDegrees = (anomalyAngleRad * 180 / Math.PI);
+  if (anomalyDegrees < 0) anomalyDegrees += 360;
+  
+  targets.push({
+    id: `tgt-major-anomaly`,
+    lat: anomalyLat,
+    lng: anomalyLng,
+    type: 'major_anomaly',
+    angle: anomalyDegrees,
+    distance: Math.sqrt(dx*dx + dy*dy),
+    radius: 30
+  });
+
   // Sort targets by angle so we can reveal them as radar sweeps
   return targets.sort((a, b) => a.angle - b.angle);
 }
