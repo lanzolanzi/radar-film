@@ -118,6 +118,7 @@ export default function App() {
             {targets.map((pt) => {
               // The sweep takes 4s to rotate. We use animation-delay based on the target's angle
               const delay = (pt.angle / 360) * 4;
+              const uniqueClass = `ping-${pt.id}`;
               
               return (
                 <Circle 
@@ -127,17 +128,16 @@ export default function App() {
                   pathOptions={{ 
                       color: '#ff3b3b', 
                       fillColor: '#ff3b3b', 
-                      fillOpacity: 1,
+                      fillOpacity: 0, // start invisible to CSS can animate it
                       stroke: false,
-                      className: `sonar-ping ${isActive ? 'ping-active' : ''}`
+                      className: `sonar-ping ${uniqueClass} ${isActive ? 'ping-active' : ''}`
                   }}
                 >
                   <style>
                     {`
-                      .sonar-ping {
+                      .${uniqueClass} {
                         /* Force specific delay for this ping so it aligns with rotation */
                         animation-delay: ${delay}s !important;
-                        animation-iteration-count: infinite !important;
                         visibility: ${isActive ? 'visible' : 'hidden'};
                       }
                     `}
