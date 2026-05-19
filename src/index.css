@@ -1,0 +1,93 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+body, html, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #050505;
+  color: #d1d1d1;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: #000;
+}
+
+/* Dark mode map styles */
+.dark-map-tiles {
+    filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+}
+
+/* 
+  To avoid lag from hundreds of individual SVG filters, 
+  we apply the drop-shadow filter to the overall SVG pane managed by Leaflet. 
+*/
+.leaflet-overlay-pane svg {
+  filter: drop-shadow(0 0 4px #ff3b3b) drop-shadow(0 0 8px #ff3b3b);
+}
+
+/* Radar Sweep Element */
+.radar-sweep-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px; /* Coverage area in px */
+  height: 300px;
+  margin-top: -150px;
+  margin-left: -150px;
+  border-radius: 50%;
+  background: 
+    linear-gradient(to right, transparent 49.8%, rgba(255, 59, 59, 0.4) 49.8%, rgba(255, 59, 59, 0.4) 50.2%, transparent 50.2%),
+    linear-gradient(to bottom, transparent 49.8%, rgba(255, 59, 59, 0.4) 49.8%, rgba(255, 59, 59, 0.4) 50.2%, transparent 50.2%),
+    radial-gradient(circle, transparent 49px, rgba(255, 59, 59, 0.3) 49px, rgba(255, 59, 59, 0.3) 51px, transparent 51px),
+    radial-gradient(circle, transparent 99px, rgba(255, 59, 59, 0.5) 99px, rgba(255, 59, 59, 0.5) 101px, transparent 101px),
+    radial-gradient(circle, transparent 148px, rgba(255, 59, 59, 0.8) 148px, rgba(255, 59, 59, 0.8) 150px, transparent 150px),
+    rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 59, 59, 0.6);
+  box-shadow: 0 0 30px rgba(255, 59, 59, 0.3), inset 0 0 60px rgba(255, 59, 59, 0.3);
+  pointer-events: none;
+  z-index: 400; /* above tiles, below UI */
+}
+
+.radar-sweep {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg, 
+    transparent 0deg, 
+    transparent 280deg, 
+    rgba(255, 59, 59, 0.1) 280deg, 
+    rgba(255, 59, 59, 0.7) 359deg, 
+    rgba(255, 255, 255, 0.8) 360deg
+  );
+}
+
+.radar-sweep-animate {
+  animation: radar-spin 4s linear infinite;
+}
+
+@keyframes radar-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Ping animation */
+.sonar-ping {
+  opacity: 0;
+}
+
+.ping-active {
+  animation: ping-fade 4s ease-out forwards;
+}
+
+@keyframes ping-fade {
+  0% { opacity: 1; filter: brightness(2) drop-shadow(0 0 4px #fff); }
+  10% { opacity: 0.9; filter: brightness(1.5) drop-shadow(0 0 4px #ff3b3b); }
+  40% { opacity: 0.5; filter: none; }
+  100% { opacity: 0; }
+}
