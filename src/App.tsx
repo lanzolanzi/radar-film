@@ -145,7 +145,7 @@ export default function App() {
                   pathOptions={{ 
                       color: color, 
                       fillColor: color, 
-                      fillOpacity: 1, // CSS handles visibility
+                      fillOpacity: 0, // CSS handles visibility during animation
                       stroke: false,
                       className: `sonar-ping ${uniqueClass} ${pingAnimClass}`
                   }}
